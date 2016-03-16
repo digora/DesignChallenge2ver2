@@ -1,7 +1,9 @@
 package dc2;
 
-public abstract class AbstractView {
+import javax.swing.*;
+
+public abstract class AbstractView extends JFrame{
 
 	
-	
+	abstract void update();
 }

@@ -6,10 +6,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-public class View extends JFrame{
+public class View extends AbstractView{
 	JLabel lblTitle;
 	JLabel lblFDate;
 	JLabel lblView;
+	JLabel lblDay;
+	
+	DayView dayView;
+	AgendaView agendaView;
 	
 	JCheckBox chkEvent;
 	JCheckBox chkTask;
@@ -18,6 +22,11 @@ public class View extends JFrame{
 	JButton btnDay;
 	JButton btnAgenda;
 	JButton btnCreate;
+	JButton btnSave;
+	JButton btnDiscard;
+	
+	JRadioButton rbEvent;
+	JRadioButton rbTask;
 	
 	JPanel panelSuperContainer;
 	JPanel panelCalendarPH;
@@ -25,6 +34,11 @@ public class View extends JFrame{
 	JPanel panelAgendaViewPH;
 	JPanel panelDeck;
 	JPanel panelCreateView;
+	
+	JTextField txtInputName;
+	
+	JComboBox cmbFrom;
+	JComboBox cmbTo;
 	
 	JScrollPane jspScrollDay;
 	JScrollPane jspScrollAgenda;
@@ -139,11 +153,79 @@ public class View extends JFrame{
 		deckC.gridy = 1;
 		deckC.weightx = 0.7;
 		deckC.weighty = 0.9;
-		deckC.gridheight = 2;
+		deckC.gridheight = 5;
 		deckC.gridwidth = 4;
 		deckC.fill = GridBagConstraints.BOTH;
 		panelSuperContainer.add(panelDeck, deckC);
 		
+		GridBagConstraints viewC = new GridBagConstraints();
+		viewC.insets = new Insets(10, 10, 10, 10);
+		
+		panelCreateView = new JPanel(new GridBagLayout());
+		panelCreateView.setOpaque(true);
+		panelCreateView.setBackground(Color.GRAY);
+		
+		txtInputName = new JTextField();
+		viewC.gridx = 0;
+		viewC.gridy = 0;
+		viewC.gridwidth = 4;
+		viewC.weightx = 0.3;
+		viewC.fill = GridBagConstraints.HORIZONTAL;
+		panelCreateView.add(txtInputName, viewC);
+		
+		viewC.gridwidth = 1;
+		
+		rbEvent = new JRadioButton("Event");
+		viewC.gridx = 4;
+		viewC.gridy = 0;
+		viewC.weightx = 0.2;
+		viewC.fill = GridBagConstraints.NONE;
+		panelCreateView.add(rbEvent, viewC);
+		
+		viewC.gridwidth = 1;
+		
+		rbTask = new JRadioButton("Task");
+		viewC.gridx = 5;
+		viewC.gridy = 0;
+		viewC.weightx = 0.2;
+		panelCreateView.add(rbTask, viewC);
+		
+		viewC.weightx = 0;
+		
+		
+		ButtonGroup bGroup = new ButtonGroup();
+		bGroup.add(rbEvent); //add mouse listeners pa and actionlistener
+		bGroup.add(rbTask);
+		
+		lblDay = new JLabel("INSERTDATETODAY");
+		viewC.gridx = 0;
+		viewC.gridy = 1;
+		panelCreateView.add(lblDay, viewC);
+		
+		cmbFrom = new JComboBox();
+		viewC.gridx = 1;
+		viewC.gridy = 1;
+		panelCreateView.add(cmbFrom, viewC);
+		
+		JLabel tempLabel1 = new JLabel("to");
+		viewC.gridx = 2;
+		viewC.gridy = 1;
+		panelCreateView.add(tempLabel1, viewC);
+		
+		cmbTo = new JComboBox();
+		viewC.gridx = 3;
+		viewC.gridy = 1;
+		panelCreateView.add(cmbTo, viewC);
+		
+		btnSave = new JButton("Save");
+		viewC.gridx = 0;
+		viewC.gridy = 2;
+		panelCreateView.add(btnSave, viewC);
+		
+		btnDiscard = new JButton("Discard");
+		viewC.gridx = 1;
+		viewC.gridy = 2;
+		panelCreateView.add(btnDiscard, viewC);
 		
 		panelDayViewPH = new JPanel();
 		panelDayViewPH.setOpaque(true);
@@ -152,10 +234,6 @@ public class View extends JFrame{
 		panelAgendaViewPH = new JPanel();
 		panelAgendaViewPH.setOpaque(true);
 		panelAgendaViewPH.setBackground(Color.green);
-		
-		panelCreateView = new JPanel();
-		panelCreateView.setOpaque(true);
-		panelCreateView.setBackground(Color.GRAY);
 		
 		
 		jspScrollDay = new JScrollPane();
@@ -172,7 +250,49 @@ public class View extends JFrame{
 		panelDeck.add(jspScrollAgenda, AGENDA_VIEW);
 		panelDeck.add(panelCreateView, CREATE_VIEW);
 		
+		panelCalendarPH = new JPanel();
+		panelCalendarPH.setOpaque(true);
+		panelCalendarPH.setBackground(Color.red);
+		cGen.gridx = 0;
+		cGen.gridy = 2;
+		cGen.weightx = 0.3;
+		cGen.weighty = 0.5;
+		cGen.fill = GridBagConstraints.BOTH;
+		panelSuperContainer.add(panelCalendarPH, cGen);
+		
+		lblView = new JLabel("View");
+		lblView.setOpaque(true);
+		lblView.setBackground(Color.white);
+		cGen.gridx = 0;
+		cGen.gridy = 3;
+		cGen.weightx = 0;
+		cGen.weighty = 0.1;
+		cGen.fill = GridBagConstraints.NONE;
+		panelSuperContainer.add(lblView, cGen);
+		
+		chkEvent = new JCheckBox("Event");
+		cGen.gridx = 0;
+		cGen.gridy = 4;
+		cGen.weightx = 0;
+		cGen.weighty = 0.1;
+		panelSuperContainer.add(chkEvent, cGen);
+		
+		chkTask = new JCheckBox("Task");
+		cGen.gridx = 0;
+		cGen.gridy = 5;
+		cGen.weightx = 0;
+		cGen.weighty = 0.1;
+		panelSuperContainer.add(chkTask, cGen);
+		
+		
+		
 		panelSuperContainer.revalidate();
+		
+	}
+
+	@Override
+	void update() {
+		// TODO Auto-generated method stub
 		
 	}
 	

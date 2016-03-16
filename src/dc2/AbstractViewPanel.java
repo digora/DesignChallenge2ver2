@@ -1,5 +1,8 @@
 package dc2;
 
-public abstract class AbstractViewPanel {
+import javax.swing.*;
 
+public abstract class AbstractViewPanel  extends JPanel{
+
+	abstract void update();
 }
