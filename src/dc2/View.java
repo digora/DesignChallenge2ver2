@@ -226,25 +226,30 @@ public class View extends AbstractView{
 		viewC.gridx = 1;
 		viewC.gridy = 2;
 		panelCreateView.add(btnDiscard, viewC);
-		
+		/*
 		panelDayViewPH = new JPanel();
 		panelDayViewPH.setOpaque(true);
 		panelDayViewPH.setBackground(Color.cyan);
+		*/
+		dayView = new DayView();
 		
+		/*
 		panelAgendaViewPH = new JPanel();
 		panelAgendaViewPH.setOpaque(true);
 		panelAgendaViewPH.setBackground(Color.green);
+		*/
+		agendaView = new AgendaView();
 		
 		
 		jspScrollDay = new JScrollPane();
 		jspScrollDay.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		jspScrollDay.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		jspScrollDay.setViewportView(panelDayViewPH);
+		jspScrollDay.setViewportView(dayView);
 		
 		jspScrollAgenda = new JScrollPane();
 		jspScrollAgenda.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		jspScrollAgenda.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		jspScrollAgenda.setViewportView(panelAgendaViewPH);
+		jspScrollAgenda.setViewportView(agendaView);
 		
 		panelDeck.add(jspScrollDay, DAY_VIEW);
 		panelDeck.add(jspScrollAgenda, AGENDA_VIEW);
