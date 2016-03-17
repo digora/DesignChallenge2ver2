@@ -11,7 +11,7 @@ public class View extends AbstractView{
 	JLabel lblFDate;
 	JLabel lblView;
 	JLabel lblDay;
-	
+
 	DayView dayView;
 	AgendaView agendaView;
 	CalendarGUI calendarPanel;
@@ -187,6 +187,15 @@ public class View extends AbstractView{
 		viewC.gridwidth = 1;
 		
 		rbEvent = new JRadioButton("Event");
+		rbEvent.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				cmbTo.setVisible(true);
+				
+			}
+		});
 		viewC.gridx = 4;
 		viewC.gridy = 0;
 		viewC.weightx = 0.2;
@@ -196,6 +205,14 @@ public class View extends AbstractView{
 		viewC.gridwidth = 1;
 		
 		rbTask = new JRadioButton("Task");
+		rbTask.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		viewC.gridx = 5;
 		viewC.gridy = 0;
 		viewC.weightx = 0.2;
@@ -208,7 +225,8 @@ public class View extends AbstractView{
 		bGroup.add(rbEvent); //add mouse listeners pa and actionlistener
 		bGroup.add(rbTask);
 		
-		lblDay = new JLabel("INSERTDATETODAY");
+		lblDay = new JLabel();
+		lblDay.setText(lblFDate.getText());
 		viewC.gridx = 0;
 		viewC.gridy = 1;
 		panelCreateView.add(lblDay, viewC);
@@ -234,7 +252,7 @@ public class View extends AbstractView{
 		JLabel tempLabel1 = new JLabel("to");
 		viewC.gridx = 2;
 		viewC.gridy = 1;
-		panelCreateView.add(tempLabel1, viewC);
+		panelCreateView.add(tempLabel1, viewC);	
 		
 		cmbTo = new JComboBox(timeSlots);
 		viewC.gridx = 3;
@@ -242,6 +260,14 @@ public class View extends AbstractView{
 		panelCreateView.add(cmbTo, viewC);
 		
 		btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		viewC.gridx = 0;
 		viewC.gridy = 2;
 		panelCreateView.add(btnSave, viewC);
