@@ -14,6 +14,7 @@ public class View extends AbstractView{
 	
 	DayView dayView;
 	AgendaView agendaView;
+	CalendarGUI calendarPanel;
 	
 	JCheckBox chkEvent;
 	JCheckBox chkTask;
@@ -56,6 +57,8 @@ public class View extends AbstractView{
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		calendarPanel = new CalendarGUI(this);
+		String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 		GridBagConstraints cFrame = new GridBagConstraints();
 		cFrame.gridx = 0;
 		cFrame.gridy = 0;
@@ -82,6 +85,14 @@ public class View extends AbstractView{
 		panelSuperContainer.add(lblTitle, cGen);
 		
 		btnToday = new JButton("Today");
+		btnToday.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				lblFDate.setText(months[calendarPanel.getCalendar().getMonthToday()] + " " + calendarPanel.getCalendar().getDayToday() + "," + calendarPanel.getCalendar().getYearToday());
+			}
+		});
 		cGen.gridx = 1;
 		cGen.gridy = 0;
 		cGen.weightx = 0;
@@ -89,7 +100,7 @@ public class View extends AbstractView{
 		cGen.fill = GridBagConstraints.NONE;
 		panelSuperContainer.add(btnToday, cGen);
 		
-		lblFDate = new JLabel("INSERTGETDATEHERE");
+		lblFDate = new JLabel(calendarPanel.getMonthFocused() + " " + calendarPanel.getDayFocused() + "," + calendarPanel.getYearFocused());
 		cGen.gridx = 2;
 		cGen.gridy = 0;
 		cGen.weightx = 0.5;
@@ -202,7 +213,20 @@ public class View extends AbstractView{
 		viewC.gridy = 1;
 		panelCreateView.add(lblDay, viewC);
 		
-		cmbFrom = new JComboBox();
+		String timeSlots[] = new String[48];
+		int run = 0;
+		for(int x2 = 0; x2 < 24; x2++){
+			for(int x3 = 0; x3 < 2; x3++){
+				if(x2 < 10){
+					timeSlots[run] = ("0" + x2 + ":" + (x3*3) + "0");
+				}else{
+					timeSlots[run] = (x2 + ":" + (x3*3) + "0");
+				}
+				run++;
+			}
+		}
+		
+		cmbFrom = new JComboBox(timeSlots);
 		viewC.gridx = 1;
 		viewC.gridy = 1;
 		panelCreateView.add(cmbFrom, viewC);
@@ -212,7 +236,7 @@ public class View extends AbstractView{
 		viewC.gridy = 1;
 		panelCreateView.add(tempLabel1, viewC);
 		
-		cmbTo = new JComboBox();
+		cmbTo = new JComboBox(timeSlots);
 		viewC.gridx = 3;
 		viewC.gridy = 1;
 		panelCreateView.add(cmbTo, viewC);
@@ -255,15 +279,19 @@ public class View extends AbstractView{
 		panelDeck.add(jspScrollAgenda, AGENDA_VIEW);
 		panelDeck.add(panelCreateView, CREATE_VIEW);
 		
+		/*
 		panelCalendarPH = new JPanel();
 		panelCalendarPH.setOpaque(true);
 		panelCalendarPH.setBackground(Color.red);
+		*/
+		
+		
 		cGen.gridx = 0;
 		cGen.gridy = 2;
 		cGen.weightx = 0.3;
 		cGen.weighty = 0.5;
 		cGen.fill = GridBagConstraints.BOTH;
-		panelSuperContainer.add(panelCalendarPH, cGen);
+		panelSuperContainer.add(calendarPanel, cGen);
 		
 		lblView = new JLabel("View");
 		lblView.setOpaque(true);
@@ -298,7 +326,7 @@ public class View extends AbstractView{
 	@Override
 	void update() {
 		// TODO Auto-generated method stub
-		
+		lblFDate.setText(calendarPanel.getMonthFocused() + " " + calendarPanel.getDayFocused() + "," + calendarPanel.getYearFocused());
 	}
 	
 }

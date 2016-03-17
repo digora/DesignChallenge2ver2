@@ -47,13 +47,25 @@ public class DayView extends AbstractViewPanel{
 		
 		for(int j = 0; j < 24; j++){
 			
-			hourCubeList.add(new JPanel());
+			hourCubeList.add(new JPanel(new GridBagLayout()));
 			hourCubeList.get(j).setOpaque(true);
 			if(j % 2 == 0){
 				hourCubeList.get(j).setBackground(Color.GREEN);
 			}else{
 				hourCubeList.get(j).setBackground(Color.lightGray);
 			}
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			JLabel lblConstTime = new JLabel();
+			
+			if(j >= 10){
+				lblConstTime.setText("" + j + ":00" );
+			}else{
+				lblConstTime.setText("0" + j + ":00");
+			}
+			
+			hourCubeList.get(j).add(lblConstTime, c);
 			hourC.gridx = 0;
 			hourC.gridy = j + x;
 			x++;
