@@ -5,9 +5,8 @@ import java.awt.*;
 
 public class Task extends TaskEvent{
 	
-	public Task(Date date, String name, String startTime, Color color)
+	public Task(int day, String month, int year, String name, String startTime, String color)
 	{
-		super(date,name,startTime,color);
-	}
-
+		super(day, month, year,name,startTime,color);
+	} 
 }

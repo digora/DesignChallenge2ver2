@@ -7,7 +7,7 @@ public abstract class ReaderWriter {
 	protected BufferedReader buffer;
 	protected String line = "";
 	protected String SplitBy = ",";
-	protected String fileName;
+	protected String fileName; //FILEPATH HERE
 	protected ArrayList<Task> fileTask = null;
 	protected ArrayList<Event> fileEvent = null;
 	

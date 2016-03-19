@@ -3,52 +3,56 @@ package dc2;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.*;
 
 public class View extends AbstractView{
-	JLabel lblTitle;
-	JLabel lblFDate;
-	JLabel lblView;
-	JLabel lblDay;
+	private JLabel lblTitle;
+	private JLabel lblFDate;
+	private JLabel lblView;
+	private JLabel lblDay;
+    
+	private DayView dayView;
+	private AgendaView agendaView;
+	private ProductivityTool pTool;
+	private CalendarGUI calendarPanel;
+	 
+	private JCheckBox chkEvent;
+	private JCheckBox chkTask;
+ 
+	private JButton btnToday;
+	private JButton btnDay;
+	private JButton btnAgenda;
+	private JButton btnCreate;
+	private JButton btnSave;
+	private JButton btnDiscard;
 
-	DayView dayView;
-	AgendaView agendaView;
-	CalendarGUI calendarPanel;
+	private JRadioButton rbEvent;
+	private JRadioButton rbTask;
+
+	private JPanel panelSuperContainer;
+	private JPanel panelDeck;
+	private JPanel panelCreateView;
+
+	private JTextField txtInputName;
+
+	private JComboBox cmbFrom;
+	private JComboBox cmbTo;
+
+	private JScrollPane jspScrollDay;
+	private JScrollPane jspScrollAgenda;
 	
-	JCheckBox chkEvent;
-	JCheckBox chkTask;
-	
-	JButton btnToday;
-	JButton btnDay;
-	JButton btnAgenda;
-	JButton btnCreate;
-	JButton btnSave;
-	JButton btnDiscard;
-	
-	JRadioButton rbEvent;
-	JRadioButton rbTask;
-	
-	JPanel panelSuperContainer;
-	JPanel panelCalendarPH;
-	JPanel panelDayViewPH;
-	JPanel panelAgendaViewPH;
-	JPanel panelDeck;
-	JPanel panelCreateView;
-	
-	JTextField txtInputName;
-	
-	JComboBox cmbFrom;
-	JComboBox cmbTo;
-	
-	JScrollPane jspScrollDay;
-	JScrollPane jspScrollAgenda;
+	private ConcreteController controller;
 	
 	final static String DAY_VIEW = "Card with day view";
 	final static String AGENDA_VIEW = "Card with agenda view";
 	final static String CREATE_VIEW = "Card with create view";
 	
-	public View(int width, int height, String title){
+	public View(int width, int height, String title, ProductivityTool PT){
+	
+		this.pTool = PT;
 		
 		this.setVisible(true);
 		this.setLayout(new GridBagLayout());
@@ -56,6 +60,8 @@ public class View extends AbstractView{
 		this.setTitle(title);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		controller = new ConcreteController(PT);
 		
 		calendarPanel = new CalendarGUI(this);
 		String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
@@ -90,7 +96,13 @@ public class View extends AbstractView{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				
 				lblFDate.setText(months[calendarPanel.getCalendar().getMonthToday()] + " " + calendarPanel.getCalendar().getDayToday() + "," + calendarPanel.getCalendar().getYearToday());
+				lblDay.setText(lblFDate.getText());
+				btnCreate.setEnabled(true);
+				//update();
+				CardLayout cl = (CardLayout)(panelDeck.getLayout());
+				cl.show(panelDeck, DAY_VIEW);
 			}
 		});
 		cGen.gridx = 1;
@@ -101,6 +113,7 @@ public class View extends AbstractView{
 		panelSuperContainer.add(btnToday, cGen);
 		
 		lblFDate = new JLabel(calendarPanel.getMonthFocused() + " " + calendarPanel.getDayFocused() + "," + calendarPanel.getYearFocused());
+		
 		cGen.gridx = 2;
 		cGen.gridy = 0;
 		cGen.weightx = 0.5;
@@ -113,6 +126,7 @@ public class View extends AbstractView{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				btnCreate.setEnabled(true);
 				CardLayout cl = (CardLayout)(panelDeck.getLayout());
 				cl.show(panelDeck, DAY_VIEW);
 			}
@@ -130,6 +144,8 @@ public class View extends AbstractView{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				btnCreate.setEnabled(true);
+				
 				CardLayout cl = (CardLayout)(panelDeck.getLayout());
 				cl.show(panelDeck, AGENDA_VIEW);
 			}
@@ -145,6 +161,7 @@ public class View extends AbstractView{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				btnCreate.setEnabled(false);
 				CardLayout cl = (CardLayout)(panelDeck.getLayout());
 				cl.show(panelDeck, CREATE_VIEW);
 			}
@@ -176,6 +193,11 @@ public class View extends AbstractView{
 		panelCreateView.setOpaque(true);
 		panelCreateView.setBackground(Color.GRAY);
 		
+		JLabel tempLabel1 = new JLabel("to");
+		viewC.gridx = 2;
+		viewC.gridy = 1;
+		panelCreateView.add(tempLabel1, viewC);	
+		
 		txtInputName = new JTextField();
 		viewC.gridx = 0;
 		viewC.gridy = 0;
@@ -187,12 +209,14 @@ public class View extends AbstractView{
 		viewC.gridwidth = 1;
 		
 		rbEvent = new JRadioButton("Event");
+		rbEvent.setSelected(true);
 		rbEvent.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				cmbTo.setVisible(true);
+				tempLabel1.setVisible(true);
 				
 			}
 		});
@@ -210,7 +234,8 @@ public class View extends AbstractView{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				
+				cmbTo.setVisible(false);
+				tempLabel1.setVisible(false);
 			}
 		});
 		viewC.gridx = 5;
@@ -224,6 +249,7 @@ public class View extends AbstractView{
 		ButtonGroup bGroup = new ButtonGroup();
 		bGroup.add(rbEvent); //add mouse listeners pa and actionlistener
 		bGroup.add(rbTask);
+		
 		
 		lblDay = new JLabel();
 		lblDay.setText(lblFDate.getText());
@@ -249,10 +275,7 @@ public class View extends AbstractView{
 		viewC.gridy = 1;
 		panelCreateView.add(cmbFrom, viewC);
 		
-		JLabel tempLabel1 = new JLabel("to");
-		viewC.gridx = 2;
-		viewC.gridy = 1;
-		panelCreateView.add(tempLabel1, viewC);	
+		
 		
 		cmbTo = new JComboBox(timeSlots);
 		viewC.gridx = 3;
@@ -264,8 +287,29 @@ public class View extends AbstractView{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				btnCreate.setEnabled(true);
 				// TODO Auto-generated method stub
-				
+				if(rbEvent.isSelected()){
+					//make new event
+					// day, month, year, name, start time, end time, color
+					controller.addEvent(new Event(calendarPanel.getDayFocused(), calendarPanel.getMonthFocused(), calendarPanel.getYearFocused(), txtInputName.getText(), cmbFrom.getSelectedItem().toString(), cmbTo.getSelectedItem().toString(), "BLUE"));
+					cmbFrom.setSelectedIndex(0);
+					cmbTo.setSelectedIndex(0);
+					txtInputName.setText("");
+					
+					CardLayout cl = (CardLayout)(panelDeck.getLayout());
+					cl.show(panelDeck, DAY_VIEW);
+				}else{
+					//make new task
+					//day, month, year, name, start time, color
+					controller.addTask(new Task(calendarPanel.getDayFocused(), calendarPanel.getMonthFocused(), calendarPanel.getYearFocused(), txtInputName.getText() ,cmbFrom.getSelectedItem().toString(), "GREEN"));
+					cmbFrom.setSelectedIndex(0);
+					cmbTo.setSelectedIndex(0);
+					txtInputName.setText("");
+					
+					CardLayout cl = (CardLayout)(panelDeck.getLayout());
+					cl.show(panelDeck, DAY_VIEW);
+				}
 			}
 		});
 		viewC.gridx = 0;
@@ -273,6 +317,19 @@ public class View extends AbstractView{
 		panelCreateView.add(btnSave, viewC);
 		
 		btnDiscard = new JButton("Discard");
+		btnDiscard.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				cmbFrom.setSelectedIndex(0);
+				cmbTo.setSelectedIndex(0);
+				txtInputName.setText("");
+				btnCreate.setEnabled(true);
+				CardLayout cl = (CardLayout)(panelDeck.getLayout());
+				cl.show(panelDeck, DAY_VIEW);
+			}
+		});
 		viewC.gridx = 1;
 		viewC.gridy = 2;
 		panelCreateView.add(btnDiscard, viewC);
@@ -281,15 +338,54 @@ public class View extends AbstractView{
 		panelDayViewPH.setOpaque(true);
 		panelDayViewPH.setBackground(Color.cyan);
 		*/
-		dayView = new DayView();
+
 		
 		/*
 		panelAgendaViewPH = new JPanel();
 		panelAgendaViewPH.setOpaque(true);
 		panelAgendaViewPH.setBackground(Color.green);
 		*/
-		agendaView = new AgendaView();
+		cGen.fill = GridBagConstraints.NONE;
+		chkEvent = new JCheckBox("Event");
+		chkEvent.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				Object source = e.getItemSelectable();
+				
+				if(source == chkEvent){
+					agendaView.checkFilter(PT, calendarPanel.getDayFocused(), calendarPanel.getMonthFocused(), calendarPanel.getYearFocused(),chkTask.isSelected(), chkEvent.isSelected());
+				}
+			}
+		});
+		cGen.gridx = 0;
+		cGen.gridy = 4;
+		cGen.weightx = 0;
+		cGen.weighty = 0.1;
+		panelSuperContainer.add(chkEvent, cGen);
 		
+		chkTask = new JCheckBox("Task");
+		chkTask.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				Object source = e.getItemSelectable();
+				
+				if(source == chkTask){
+					agendaView.checkFilter(PT, calendarPanel.getDayFocused(), calendarPanel.getMonthFocused(), calendarPanel.getYearFocused(),chkTask.isSelected(), chkEvent.isSelected());
+				}
+			}
+		});
+		cGen.gridx = 0;
+		cGen.gridy = 5;
+		cGen.weightx = 0;
+		cGen.weighty = 0.1;
+		panelSuperContainer.add(chkTask, cGen);
+		
+		agendaView = new AgendaView(PT, calendarPanel.getDayFocused(), calendarPanel.getMonthFocused(), calendarPanel.getYearFocused(), chkTask.isSelected(), chkEvent.isSelected());
+		dayView = new DayView(PT, calendarPanel.getDayFocused(), calendarPanel.getMonthFocused(), calendarPanel.getYearFocused(), chkTask.isSelected(), chkEvent.isSelected());
 		
 		jspScrollDay = new JScrollPane();
 		jspScrollDay.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -329,21 +425,6 @@ public class View extends AbstractView{
 		cGen.fill = GridBagConstraints.NONE;
 		panelSuperContainer.add(lblView, cGen);
 		
-		chkEvent = new JCheckBox("Event");
-		cGen.gridx = 0;
-		cGen.gridy = 4;
-		cGen.weightx = 0;
-		cGen.weighty = 0.1;
-		panelSuperContainer.add(chkEvent, cGen);
-		
-		chkTask = new JCheckBox("Task");
-		cGen.gridx = 0;
-		cGen.gridy = 5;
-		cGen.weightx = 0;
-		cGen.weighty = 0.1;
-		panelSuperContainer.add(chkTask, cGen);
-		
-		
 		
 		panelSuperContainer.revalidate();
 		
@@ -353,6 +434,10 @@ public class View extends AbstractView{
 	void update() {
 		// TODO Auto-generated method stub
 		lblFDate.setText(calendarPanel.getMonthFocused() + " " + calendarPanel.getDayFocused() + "," + calendarPanel.getYearFocused());
+		lblDay.setText(lblFDate.getText());
+		agendaView.update(pTool, calendarPanel.getDayFocused(), calendarPanel.getMonthFocused(), calendarPanel.getYearFocused(),chkTask.isSelected(), chkEvent.isSelected());
+		dayView.update(pTool, calendarPanel.getDayFocused(), calendarPanel.getMonthFocused(), calendarPanel.getYearFocused(),chkTask.isSelected(), chkEvent.isSelected());
+	
 	}
 	
 }

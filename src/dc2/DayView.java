@@ -7,8 +7,39 @@ import java.util.ArrayList;
 public class DayView extends AbstractViewPanel{
 	private ArrayList<JPanel> timeSlotList; //Think of a way to connect to timeslots being taken boy
 	private ArrayList<JPanel> hourCubeList; 
+	private ArrayList<Task> tasksTodayList = new ArrayList<Task> ();
+	private ArrayList<Event> eventsTodayList = new ArrayList<Event> ();
+	private ArrayList<TaskEvent> allList = new ArrayList<TaskEvent>();
 	
-	public DayView(){ //should accept values from productivityshti
+	public DayView(ProductivityTool PT, int dayFocused, String monthFocused, int yearFocused, boolean checkTask, boolean checkEvent){ //should accept values from productivityshti
+		
+		for(int i = 0; i < PT.getEventSize(); i++){
+			if(PT.getEventList().get(i).getDay() == dayFocused && PT.getEventList().get(i).getMonth().equals(monthFocused) && PT.getEventList().get(i).getYear() == yearFocused&& PT.getEventList().get(i).getColor().equals("BLUE")){
+				// day, month, year, name, start time, end time, color
+				
+				eventsTodayList.add(PT.getEventList().get(i));
+			}
+		}
+			
+		for(int i = 0; i < PT.getTaskSize(); i++){
+			if(PT.getTaskList().get(i).getDay() == dayFocused && PT.getTaskList().get(i).getMonth().equals(monthFocused) && PT.getTaskList().get(i).getYear() == yearFocused&& PT.getTaskList().get(i).getColor().equals("GREEN")){
+				//day, month, year, name, start time, color
+				tasksTodayList.add(PT.getTaskList().get(i));
+			}
+		}
+		
+			for(int i = 0; i < tasksTodayList.size(); i++){
+				allList.add(tasksTodayList.get(i));
+			}
+			
+			for(int i = 0; i < eventsTodayList.size(); i++){
+				allList.add(eventsTodayList.get(i));
+			}
+			
+			for(int j = 0; j < allList.size(); j++){
+				System.out.println("DIED " + allList.get(j).getName() + " on " + allList.get(j).getDay() + " " + allList.get(j).getMonth() + " " + allList.get(j).getYear() + " Showtime "  + allList.get(j).getStartTime() + " Color " + allList.get(j).getColor() );
+			}
+		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints timeslotC = new GridBagConstraints();
 		GridBagConstraints hourC = new GridBagConstraints();
@@ -23,10 +54,60 @@ public class DayView extends AbstractViewPanel{
 			
 			timeSlotList.add(new JPanel());
 			timeSlotList.get(i).setOpaque(true);
-			if(i % 2 == 0)
-				timeSlotList.get(i).setBackground(Color.magenta);
-			else
-				timeSlotList.get(i).setBackground(Color.yellow);
+			timeSlotList.get(i).setBackground(Color.yellow);
+			
+			String time = "";
+			String hour = "" + i/2;
+			String minutes = "" + (i%2*30);
+		//	System.out.println("BEFORE PROCESSING: " + hour + ":" + minutes);
+			//if(hour.length() == 1){
+			//	hour = "0" + hour;
+			//}
+			if(minutes.length() != 2){
+				minutes = "00";
+			}
+			time = hour + ":" + minutes;
+			System.out.println("TIME: " + time);
+			
+			for(int j = 0; j < allList.size(); j++ ){
+				System.out.println("I am checking out: " + allList.get(j).getName() + " on " + allList.get(j).getDay() + " " + allList.get(j).getMonth() + " " + allList.get(j).getYear() + " Showtime "  + allList.get(j).getStartTime() + " Color " + allList.get(j).getColor() );
+				if(allList.get(j).getStartTime().equals(time)){
+					if(allList.get(j).getColor().equals("BLUE")){
+						
+						timeSlotList.get(i).add(new JLabel(allList.get(j).getName()));
+						timeSlotList.get(i).setBackground(Color.blue);
+						/*
+						for(int x2 = 0; ; x2++){
+							
+							timeSlotList.get(i).setBackground(Color.blue);
+							String ntime = "";
+							String nhour = "" + i/2;
+							String nminutes = "" + (i%2*30);
+						//	System.out.println("BEFORE PROCESSING: " + hour + ":" + minutes);
+							//if(hour.length() == 1){
+							//	hour = "0" + hour;
+							//}
+							if(nminutes.length() != 2){
+								nminutes = "00";
+							}
+							ntime = nhour + ":" + nminutes;
+							System.out.println("TIME: " + ntime);
+							if(allList.get(j).getEndTime().equals(ntime)){
+								break;
+							}
+							
+						}
+						*/
+					}else{
+						timeSlotList.get(i).add(new JLabel(allList.get(j).getName()));
+						timeSlotList.get(i).setBackground(Color.green);
+					}
+				}
+			}
+			
+		
+				
+			
 			timeslotC.gridx = 1;
 			timeslotC.gridy = i;
 			timeslotC.fill = GridBagConstraints.BOTH;
@@ -80,9 +161,9 @@ public class DayView extends AbstractViewPanel{
 	
 
 	@Override
-	void update() {
+	void update(ProductivityTool PT, int dayFocused, String monthFocused, int yearFocused, boolean checkTask, boolean checkEvent) {
 		// TODO Auto-generated method stub
-		
+		//System.out.println("Dayu");
 	}
  //Pass a method that gets the state of the calendar (With events and agendas for today)
 }
